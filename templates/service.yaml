@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nalej-fixture.entryName" . }}
+  labels:
+    app: {{ include "nalej-fixture.entryName" . }}
+spec:
+  selector:
+    app: {{ include "nalej-fixture.entryName" . }}
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+      protocol: TCP

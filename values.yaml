@@ -1,0 +1,13 @@
+image:
+  repository: registry.os.nalej.org/library-fleet/landing-page-web-app
+  tag: "14c26670"
+  digest: sha256:c9fbe3cd43d3c6a8d94264f637fb001b7a189c7fe8d238d7fc7237f5ad925153
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

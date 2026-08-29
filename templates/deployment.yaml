@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nalej-fixture.entryName" . }}
+  labels:
+    app: {{ include "nalej-fixture.entryName" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "nalej-fixture.entryName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "nalej-fixture.entryName" . }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web-app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}@{{ .Values.image.digest }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - node
+          args:
+            - -e
+            - |-
+              const http = require('http');
+              const port = Number(process.env.PORT || 3000);
+              const body = '<!doctype html><html><head><meta charset="utf-8"><title>Nalej GitHub fixture</title></head><body><main><h1>Nalej Service Registry GitHub fixture</h1><p id="source-proof">This response came from the public GitHub chart deployed on the tenant userapps node group.</p></main></body></html>';
+              http.createServer((request, response) => {
+                if (request.url === '/api/health' || request.url === '/api/ready') {
+                  response.writeHead(200, {'content-type': 'application/json'});
+                  response.end('{"status":"ok"}');
+                  return;
+                }
+                response.writeHead(200, {'content-type': 'text/html; charset=utf-8'});
+                response.end(body);
+              }).listen(port, '0.0.0.0');
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
