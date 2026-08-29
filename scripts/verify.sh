@@ -32,7 +32,9 @@ assert deployment["spec"]["template"]["metadata"]["labels"]["app"] == "github-we
 assert "nodeSelector" not in deployment["spec"]["template"]["spec"]
 assert "tolerations" not in deployment["spec"]["template"]["spec"]
 container = deployment["spec"]["template"]["spec"]["containers"][0]
-assert container["image"] == "registry.os.nalej.org/library-fleet/landing-page-web-app:14c26670@sha256:c9fbe3cd43d3c6a8d94264f637fb001b7a189c7fe8d238d7fc7237f5ad925153"
+assert container["image"] == "public.ecr.aws/docker/library/node:22-alpine@sha256:76789712cd1ae89a1225eac9077010d68987a423588042dac30446f502f1858c"
+assert deployment["spec"]["template"]["spec"]["securityContext"]["runAsUser"] == 1000
+assert deployment["spec"]["template"]["spec"]["securityContext"]["runAsGroup"] == 1000
 assert container["command"] == ["node"]
 assert container["args"][0] == "-e"
 server = container["args"][1]

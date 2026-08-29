@@ -1,7 +1,7 @@
 image:
-  repository: registry.os.nalej.org/library-fleet/landing-page-web-app
-  tag: "14c26670"
-  digest: sha256:c9fbe3cd43d3c6a8d94264f637fb001b7a189c7fe8d238d7fc7237f5ad925153
+  repository: public.ecr.aws/docker/library/node
+  tag: "22-alpine"
+  digest: sha256:76789712cd1ae89a1225eac9077010d68987a423588042dac30446f502f1858c
   pullPolicy: IfNotPresent
 
 resources:
