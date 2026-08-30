@@ -64,6 +64,13 @@ curl -fsS http://127.0.0.1:19898/api/health | grep -q '"status":"ok"'
 second_render="$(helm template service-registry-second-entry "$repo_root")"
 grep -q '^  name: service-registry-second-entry$' <<<"$second_render"
 
+legacy_render="$(helm template service-registry-service-registry-github-web "$repo_root")"
+grep -q '^  name: service-registry-github-web$' <<<"$legacy_render"
+if grep -q '^  name: service-registry-service-registry-github-web$' <<<"$legacy_render"; then
+  echo "Legacy-prefixed render did not normalize to the Service Registry entry identity" >&2
+  exit 1
+fi
+
 if helm template github-web "$repo_root" >/dev/null 2>&1; then
   echo "Helm release name without the service-registry- prefix unexpectedly rendered" >&2
   exit 1
