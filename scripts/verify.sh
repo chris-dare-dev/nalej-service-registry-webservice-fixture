@@ -27,8 +27,8 @@ assert set(by_kind) == {"Deployment", "Service"}, set(by_kind)
 
 deployment = by_kind["Deployment"]
 service = by_kind["Service"]
-assert deployment["metadata"]["name"] == "github-web"
-assert deployment["spec"]["template"]["metadata"]["labels"]["app"] == "github-web"
+assert deployment["metadata"]["name"] == "service-registry-github-web"
+assert deployment["spec"]["template"]["metadata"]["labels"]["app"] == "service-registry-github-web"
 assert "nodeSelector" not in deployment["spec"]["template"]["spec"]
 assert "tolerations" not in deployment["spec"]["template"]["spec"]
 container = deployment["spec"]["template"]["spec"]["containers"][0]
@@ -42,8 +42,8 @@ assert "Nalej Service Registry GitHub fixture" in server
 assert "source-proof" in server
 assert "src=" not in server
 assert "href=" not in server
-assert service["metadata"]["name"] == "github-web"
-assert service["spec"]["selector"] == {"app": "github-web"}
+assert service["metadata"]["name"] == "service-registry-github-web"
+assert service["spec"]["selector"] == {"app": "service-registry-github-web"}
 assert service["spec"]["ports"][0]["port"] == 3000
 print(server)
 PY
@@ -62,7 +62,7 @@ curl -fsS http://127.0.0.1:19898/ | grep -q 'id="source-proof"'
 curl -fsS http://127.0.0.1:19898/api/health | grep -q '"status":"ok"'
 
 second_render="$(helm template service-registry-second-entry "$repo_root")"
-grep -q '^  name: second-entry$' <<<"$second_render"
+grep -q '^  name: service-registry-second-entry$' <<<"$second_render"
 
 if helm template github-web "$repo_root" >/dev/null 2>&1; then
   echo "Helm release name without the service-registry- prefix unexpectedly rendered" >&2

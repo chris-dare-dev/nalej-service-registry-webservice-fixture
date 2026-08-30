@@ -7,5 +7,5 @@
 {{- if not $entryName -}}
 {{- fail "the Helm release name must include the Service Registry entry name" -}}
 {{- end -}}
-{{- $entryName -}}
+{{- $releaseName -}}
 {{- end -}}
